@@ -7,15 +7,19 @@ let satelliteRepo = require("./repos/satelliteRepo");
 
 //Use the express Router opbject
 let router = express.Router();
-let satellites = satelliteRepo.get();
+
 
 //Create GET to return a list of satellites
 router.get("/", function (req, res, next) {
+  satelliteRepo.get(function (data) {
     res.status(200).json({
      "status": 200,
      "sttusText": "OK",
      "message": "All satellites retrieved.",
-     "data": satellites
+     "data": data
+    });
+  }, function(err){
+    next(err);
   });
 });
 
