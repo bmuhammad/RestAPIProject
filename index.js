@@ -126,7 +126,6 @@ router.put("/:id", function (req, res, next) {
   });
 });
 
-
 router.delete("/:id", function (req, res, next) {
   satelliteRepo.getById(req.params.id, function (data) {
     if (data) {
@@ -137,6 +136,34 @@ router.delete("/:id", function (req, res, next) {
           statusText: "OK",
           message: "The satellite '" + req.params.id + "' is deleted.",
           data: "Satellite '" + req.params.id + "' deleted.",
+        });
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        stausText: "Not found",
+        message: "The satellite '" + req.params.id + "' could not be found.",
+        error: {
+          code: "NOT_FOUND",
+          message: "The satellite '" + req.params.id + "' could not be found.",
+        },
+      });
+    }
+  }, function(err) {
+    next(err);
+  });
+});
+
+router.patch("/:id", function (req, res, next) {
+  satelliteRepo.getById(req.params.id, function (data) {
+    if (data) {
+      //Attempt to update the data
+      satelliteRepo.update(req.body, req.params.id, function (data) {
+        res.status(200).json({
+          status: 200,
+          statusText: "OK",
+          message: "Satellite '" + req.params.id + "' patched.",
+          data: data
         });
       });
     } else {
