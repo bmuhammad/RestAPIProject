@@ -185,6 +185,20 @@ router.patch("/:id", function (req, res, next) {
 //Configure router so all routes are prefixed /api/v1
 app.use("/api/", router);
 
+//Configure exception middleware last. Express has a built in one in the repo but added custom one here
+//fourth parameter err denotes middle ware error
+app.use(function(err, req, res, next) {
+  res.status(500).json({
+    "status": 500,
+    "statusText": "Internal Server Error",
+    "message": err.message,
+    "error": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "message": err.message
+    }
+  });
+});
+
 //Create server to listen on port 3000
 var server = app.listen(5000, function () {
   console.log("Node server is running on http://localhose:5000..");
