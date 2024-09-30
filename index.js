@@ -98,6 +98,34 @@ router.post("/", function (req, res, next) {
   );
 });
 
+router.put("/:id", function (req, res, next) {
+  satelliteRepo.getById(req.params.id, function (data) {
+    if (data) {
+      //Attempt to update the data
+      satelliteRepo.update(req.body, req.params.id, function (data) {
+        res.status(200).json({
+          status: 200,
+          statusText: "OK",
+          message: "Satellite '" + req.params.id + "' update.",
+          data: data,
+        });
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        stausText: "Not found",
+        message: "The satellite '" + req.params.id + "' could not be found.",
+        error: {
+          code: "NOT_FOUND",
+          message: "The satellite '" + req.params.id + "' could not be found.",
+        },
+      });
+    }
+  }, function(err) {
+    next(err);
+  });
+});
+
 //Configure router so all routes are prefixed /api/v1
 app.use("/api/", router);
 

@@ -64,6 +64,28 @@ let satelliteRepo = {
       }
     });
   },
+
+  update: function (newData, id, resolve, reject) {
+    fs.readFile(FILE_NAME, function (err, data) {
+      if (err) {
+        reject(err);
+      } else {
+        let satellites = JSON.parse(data);
+        let satellite = satellites.find((s) => s.id == id);
+
+        if (satellite) {
+          Object.assign(satellite, newData);
+          fs.writeFile(FILE_NAME, JSON.stringify(satellites), function (err) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(newData);
+            }
+          });
+        }
+      }
+    });
+  },
 };
 
 module.exports = satelliteRepo;
