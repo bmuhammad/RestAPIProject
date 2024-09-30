@@ -5,6 +5,8 @@ let app = express();
 //Assign variable for accessing data. Data is in an array.
 let satelliteRepo = require("./repos/satelliteRepo");
 
+let errorHelper = require('./helpers/errorhelpers');
+
 //Use the express Router opbject
 let router = express.Router();
 
@@ -185,34 +187,12 @@ router.patch("/:id", function (req, res, next) {
 //Configure router so all routes are prefixed /api/v1
 app.use("/api/", router);
 
-function errorBuilder(err){
-  return {
-    "status": 500,
-    "statusText": "Internal Server Error",
-    "message": err.message,
-    "error": {
-      "errno": err.errno,
-      "call": err.syscall,
-      "code": "INTERNAL_SERVER_ERROR",
-      "message": err.message
-    }
-  }
-}
-
-//Configur exception logger
-//logs error to console
-app.use(function(err, req, res, next) {
-  console.log(errorBuilder(err));
-  next(err);
- });
-
- 
-//Configure exception middleware last. Express has a built in one in the repo but added custom one here
-//fourth parameter err denotes middle ware error
-app.use(function(err, req, res, next) {
-  res.status(500).json(errorBuilder(err));
-});
-
+//Configure exception logger to console
+app.use(errorHelper.logErrorsToConsole);
+//Configure client error handler
+app.use(errorHelper.clientErrorHandler);
+//Configure catch-all exception middleware last
+app.use(errorHelper.errorHandler);
 
 //Create server to listen on port 3000
 var server = app.listen(5000, function () {
