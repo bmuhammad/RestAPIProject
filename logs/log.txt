@@ -1,0 +1,3 @@
+********************************************************************************Date/Time: 9/30/2024
+Exception Info: {"status":500,"statusText":"Internal Server Error","message":"ENOENT: no such file or directory, open 'C:\\Users\\brian\\Desktop\\satellitesapi\\assets\\satellites2.json'","error":{"errno":-4058,"call":"open","code":"INTERNAL_SERVER_ERROR","message":"ENOENT: no such file or directory, open 'C:\\Users\\brian\\Desktop\\satellitesapi\\assets\\satellites2.json'"},"requestInfo":{"hostname":"localhost","path":"/api/"}}
+********************************************************************************
