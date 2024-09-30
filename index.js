@@ -25,6 +25,26 @@ router.get("/", function (req, res, next) {
   );
 });
 
+//Create GET/search?id=t&type= str to search for satellites by 'id' and/ or 'type'
+router.get('/search', function (req, res, next) {
+  let searchObject = {
+    "id": req.query.id,
+    "type": req.query.type
+  };
+
+  satelliteRepo.search(searchObject, function (data){
+    res.status(200).json({
+      "status": 200,
+      "statusText": "OK",
+      "message": "All satellites retrieved.",
+      "data": data
+    });
+  }, function (err) {
+    next(err);
+  });
+  });
+
+
 router.get("/:id", function (req, res, next) {
   satelliteRepo.getById(
     req.params.id,

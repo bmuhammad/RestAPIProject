@@ -1,28 +1,52 @@
-let fs = require('fs');
-const FILE_NAME = './assets/satellites.json'
+let fs = require("fs");
+const FILE_NAME = "./assets/satellites.json";
 
 let satelliteRepo = {
-  get: function(resolve, reject){
+  get: function (resolve, reject) {
     fs.readFile(FILE_NAME, function (err, data) {
-      if(err){
+      if (err) {
         reject(err);
-      }
-      else {
+      } else {
         resolve(JSON.parse(data));
       }
-    })
+    });
   },
-  getById: function(id, resolve, reject){
+  getById: function (id, resolve, reject) {
     fs.readFile(FILE_NAME, function (err, data) {
-      if(err) {
+      if (err) {
         reject(err);
-      }
-      else {
-        let satellite = JSON.parse(data).find(s => s.id == id);
+      } else {
+        let satellite = JSON.parse(data).find((s) => s.id == id);
         resolve(satellite);
       }
-    })
-  }
+    });
+  },
+  search: function (searchObject, resolve, reject) {
+    fs.readFile(FILE_NAME, function (err, data) {
+      if (err) {
+        reject(err);
+      } else {
+        let satellites = JSON.parse(data);
+        //Perform search
+        if (searchObject) {
+          //Example search object
+          //let search object = {
+          //"id": 1,
+          //"type": 'A'}
+          satellites = satellites.filter(
+            (s) =>
+              (searchObject.id ? s.id == searchObject.id : true) &&
+              (searchObject.type
+                ? s.type
+                    .toLowerCase()
+                    .indexOf(searchObject.type.toLowerCase()) >= 0
+                : true)
+          );
+        }
+        resolve(satellites);
+      }
+    });
+  },
 };
 
 module.exports = satelliteRepo;
