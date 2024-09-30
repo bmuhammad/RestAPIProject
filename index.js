@@ -126,6 +126,35 @@ router.put("/:id", function (req, res, next) {
   });
 });
 
+
+router.delete("/:id", function (req, res, next) {
+  satelliteRepo.getById(req.params.id, function (data) {
+    if (data) {
+      //Attempt to delete the data
+      satelliteRepo.delete(req.params.id, function (data) {
+        res.status(200).json({
+          status: 200,
+          statusText: "OK",
+          message: "The satellite '" + req.params.id + "' is deleted.",
+          data: "Satellite '" + req.params.id + "' deleted.",
+        });
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        stausText: "Not found",
+        message: "The satellite '" + req.params.id + "' could not be found.",
+        error: {
+          code: "NOT_FOUND",
+          message: "The satellite '" + req.params.id + "' could not be found.",
+        },
+      });
+    }
+  }, function(err) {
+    next(err);
+  });
+});
+
 //Configure router so all routes are prefixed /api/v1
 app.use("/api/", router);
 
